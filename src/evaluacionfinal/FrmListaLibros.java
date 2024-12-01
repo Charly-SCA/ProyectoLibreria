@@ -26,13 +26,13 @@ public class FrmListaLibros extends javax.swing.JFrame {
             if (objetos != null) {
                 actualizarTabla(objetos);
             }
-//            else {
-//                JOptionPane.showMessageDialog(null, "Error al intentar leer el archivo",
-//                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
-//            }
+            else {
+                JOptionPane.showMessageDialog(null, "Error al intentar leer el archivo",
+                       "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
+                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
         }
     }
     public void actualizarTabla(ArrayList<Object> objetos) {
@@ -85,15 +85,28 @@ public class FrmListaLibros extends javax.swing.JFrame {
 
         tblLibros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Nombre", "Autor", "Estado"
+                "Nombre", "Autor"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblLibros.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblLibrosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblLibros);
 
         btnAgregarLibro.setText("Agregar Libro");
@@ -137,6 +150,17 @@ public class FrmListaLibros extends javax.swing.JFrame {
         //ocultamos el form actual
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarLibroActionPerformed
+
+    private void tblLibrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLibrosMouseClicked
+        if (evt.getClickCount() == 2) {
+            //Enviamos la fila seleccionada y la referencia a this
+            FrmLibro frm = new FrmLibro(tblLibros.getSelectedRow(), this);
+            //mostramos el form de edición
+            frm.setVisible(true);
+            //ocultamos el form actual
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_tblLibrosMouseClicked
 
     /**
      * @param args the command line arguments

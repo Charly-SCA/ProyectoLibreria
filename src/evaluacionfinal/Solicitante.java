@@ -28,4 +28,9 @@ class Solicitante implements Serializable{
         this.nombre = nombre;
     }
     
+    @Override
+    public String toString() {
+        return nombre; // Para que el combo box muestre este valor
+    }
+
 }

@@ -7,10 +7,6 @@ package evaluacionfinal;
 
 import java.io.Serializable;
 
-/**
- *
- * @author charl
- */
 public class Libro implements Serializable{
     private static final long serialVersionUID = 1L;
     
@@ -57,14 +53,13 @@ public class Libro implements Serializable{
     }
     
     public Object[] toArray(){
-        return new Object[]{nombre, autor, disponible};
+        return new Object[]{nombre, autor};
     }
-    /*
+    
     @Override
     public String toString() {
-        return nombre + "&$" + autor + "&$" + disponible;
+        return nombre+" - "+autor; // Para que el combo box muestre este valor
     }
-    */
 }
 
 

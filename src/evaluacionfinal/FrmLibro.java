@@ -5,7 +5,10 @@
  */
 package evaluacionfinal;
 
+import java.time.DateTimeException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,7 +17,7 @@ import javax.swing.JOptionPane;
  */
 public class FrmLibro extends javax.swing.JFrame {
     
-    private int idxAlumno = -1;
+    private int idLibro = -1;
     private FrmListaLibros formLista;
 
     /**
@@ -23,6 +26,28 @@ public class FrmLibro extends javax.swing.JFrame {
     public FrmLibro(FrmListaLibros formLista) {
         initComponents();
         this.formLista = formLista;
+    }
+    
+    public FrmLibro(int idLibro ,FrmListaLibros formLista) {
+        try {
+            initComponents();
+            //Buscar esa línea en el archivo y cargar las cajas de texto
+            Object objeto = ManejadorArchivos.leerObjeto("Libros.txt", idLibro);
+            //Solo si la línea se encontró en el archivo carga los datos
+            if (objeto != null) {
+                this.idLibro = idLibro;
+                this.formLista = formLista;
+                Libro lib = (Libro)objeto;
+                txtNombreLibro.setText(lib.getNombre());
+                txtAutorLibro.setText(lib.getAutor());
+            } else {
+                //Lanzar una excepción
+                throw new NoSuchElementException("El libro seleccionado no se encontró");
+            }
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
+                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
 
@@ -138,13 +163,34 @@ public class FrmLibro extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try{
             Libro lib = new Libro(txtNombreLibro.getText(), txtAutorLibro.getText());
-            //Enviamos a almacenar el nuevo libro y obtenemos la actualización de las líneas 
+            if (idLibro >= 0) {
+            //Enviamos la posición de la línea a reemplazar, el librp con las modificaciones 
+            //en versión String y obtenemos la actualización de las líneas 
+            ArrayList<Object> objetos = ManejadorArchivos.reemplazarObjeto("Libros.txt",
+                    idLibro, lib);
+            if (objetos != null) {
+                //Si el reemplazo se hizo correctamente informamos
+                JOptionPane.showMessageDialog(this, "El libro se ha actualizado correctamente",
+                        "Gestión Libros", JOptionPane.INFORMATION_MESSAGE);
+                //Actualizamos la lista
+                formLista.actualizarTabla(objetos);
+                //Mostramos el form de la lista
+                formLista.setVisible(true);
+                //Cerramos el form actual
+                this.dispose();
+            } else {
+                //Informar que no se hizo la operación
+                JOptionPane.showMessageDialog(this, "La actualización no pudo ser completada",
+                        "Gestión Libros", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            //Enviamos a almacenar elnuevo libro y obtenemos la actualización de las líneas 
             ArrayList<Object> objetos = ManejadorArchivos.agregarObjeto("Libros.txt",
                     lib);
             if (objetos != null) {
-                //Si la agregacion se hizo correctamente informamos
+                //Si el reemplazo se hizo correctamente informamos
                 JOptionPane.showMessageDialog(this, "El libro se ha añadido correctamente",
-                        "Gestión de libros", JOptionPane.INFORMATION_MESSAGE);
+                        "Gestión Libros", JOptionPane.INFORMATION_MESSAGE);
                 //Actualizamos la lista
                 formLista.actualizarTabla(objetos);
                 //Mostramos el form de la lista
@@ -154,16 +200,16 @@ public class FrmLibro extends javax.swing.JFrame {
             } else {
                 //Informar que no se hizo la operación
                 JOptionPane.showMessageDialog(this, "El libro no pudo ser agregado",
-                        "Gestión de libros", JOptionPane.ERROR_MESSAGE);
+                        "Gestión Libros", JOptionPane.ERROR_MESSAGE);
             }
+        }
         }catch(IllegalArgumentException ex){
             JOptionPane.showMessageDialog(this, ex.getMessage(),
-                        "Gestión de libros", JOptionPane.ERROR_MESSAGE);
-        }catch(ClassNotFoundException ex) {
+                        "Gestión Libros", JOptionPane.ERROR_MESSAGE);
+        } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-                        "Aplicación para gestionar libros", JOptionPane.ERROR_MESSAGE);
+                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed

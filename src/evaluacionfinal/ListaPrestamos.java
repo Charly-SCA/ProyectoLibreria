@@ -4,6 +4,10 @@
  */
 package evaluacionfinal;
 
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author RAUL
@@ -14,7 +18,20 @@ public class ListaPrestamos extends javax.swing.JFrame {
      * Creates new form ListaPrestamos
      */
     public ListaPrestamos() {
-        initComponents();
+        try {
+            initComponents();
+            ArrayList<Object> objetos = ManejadorArchivos.leerArchivo("Prestamos.txt");
+            if (objetos != null) {
+                actualizarTabla(objetos);
+            }
+//            else {
+//                JOptionPane.showMessageDialog(null, "Error al intentar leer el archivo",
+//                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
+//            }
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
+                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -140,7 +157,16 @@ public class ListaPrestamos extends javax.swing.JFrame {
         pantalla.setVisible(true); 
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
-
+    
+    
+    public void actualizarTabla(ArrayList<Object> objetos) {
+        DefaultTableModel contenidoTabla = (DefaultTableModel) tblPrestamos.getModel();
+        //Quitar cualquier fila que ya esté en la tabla 
+        contenidoTabla.setRowCount(0);
+        for (Object objeto : objetos) {
+            contenidoTabla.addRow(((Prestamo)objeto).toArray());
+        }
+    }
     /**
      * @param args the command line arguments
      */
