@@ -5,11 +5,14 @@
  */
 package evaluacionfinal;
 
+import java.io.Serializable;
+
 /**
  *
  * @author charl
  */
-class Solicitante {
+class Solicitante implements Serializable{
+    private static final long serialVersionUID = 1L;
     
     private String nombre;
 
@@ -25,6 +28,4 @@ class Solicitante {
         this.nombre = nombre;
     }
     
-    
-
 }
