@@ -160,6 +160,9 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JPasswordField" name="pwdContrasena">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pwdContrasenaActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="chkMostrarContrasena">
       <Properties>

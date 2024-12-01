@@ -20,13 +20,33 @@ public class FrmLogin extends javax.swing.JFrame {
     public FrmLogin() {
         initComponents(); 
         usuarios = new ArrayList<>(); 
-        cargarUsuarios(); 
         verificarUsuarioInicial();
+        
+        
     }
+    
+    public String encriptar(String contrasena){ 
+        String encriptada = ""; 
+        for (int i = 0; i < contrasena.length(); i++){ 
+            char c = contrasena.charAt(i); 
+            encriptada += (char) (c + 1); 
+        } 
+        return encriptada; 
+    }
+    
+    public String desencriptar(String contrasena) { 
+        String desencriptada = ""; 
+        for (int i = 0; i < contrasena.length(); i++){ 
+            char c = contrasena.charAt(i); 
+            desencriptada += (char) (c - 1); 
+        } return desencriptada; 
+    }
+    
     private void verificarUsuarioInicial() { 
+        cargarUsuarios(); 
         if (usuarios.isEmpty()){
-            Usuario admin = new Usuario(1, "Chuchin3000", "Erik", "Ramirez", "Contrasenia");
-            usuarios.add(admin);
+            Usuario admin = new Usuario(1, "Chuchin3000", "Erik", "Ramirez", encriptar("Contrasenia"));
+                usuarios.add(admin);
             try{
                 ManejadorArchivos.agregarObjeto("usuarios.txt", admin);
             }catch(ClassNotFoundException ex){
@@ -36,7 +56,7 @@ public class FrmLogin extends javax.swing.JFrame {
     }
     private void cargarUsuarios() { 
         try { 
-            ArrayList<Object> usuariosCargados = ManejadorArchivos.leerArchivo("Usuarios.txt");
+            ArrayList<Object> usuariosCargados = ManejadorArchivos.leerArchivo("usuarios.txt");
             for (Object obj : usuariosCargados) { 
                 if (obj instanceof Usuario) { 
                     usuarios.add((Usuario) obj);
@@ -49,8 +69,9 @@ public class FrmLogin extends javax.swing.JFrame {
     }
     
     private boolean verificarCredenciales(String apodo, String contrasena){ 
-        for (Usuario usuario : usuarios){ 
-            if (usuario.getApodo().equals(apodo) && usuario.getContrasena().equals(contrasena)) {  
+        for (Usuario usuario : usuarios){
+            String contrasenaDesencriptada = desencriptar(usuario.getContrasena());
+            if (usuario.getApodo().equals(apodo) && contrasenaDesencriptada.equals(contrasena)) {  
                     return true; 
             }
         }
@@ -124,6 +145,12 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addContainerGap(28, Short.MAX_VALUE))
         );
+
+        pwdContrasena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pwdContrasenaActionPerformed(evt);
+            }
+        });
 
         chkMostrarContrasena.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         chkMostrarContrasena.setText("Mostrar Contraseña");
@@ -224,6 +251,10 @@ public class FrmLogin extends javax.swing.JFrame {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void pwdContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pwdContrasenaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pwdContrasenaActionPerformed
 
     /**
      * @param args the command line arguments

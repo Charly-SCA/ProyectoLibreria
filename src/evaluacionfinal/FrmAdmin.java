@@ -68,10 +68,25 @@ public class FrmAdmin extends javax.swing.JFrame {
         });
 
         btnGestionarPrestamos.setText("Gestionar Prestamos");
+        btnGestionarPrestamos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionarPrestamosActionPerformed(evt);
+            }
+        });
 
         btnConsultarPrestamos.setText("Consultar prestamos");
+        btnConsultarPrestamos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarPrestamosActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Gestionar Libros");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,8 +125,22 @@ public class FrmAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGestionarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarUsuariosActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
+        FrmGestionUsuarios GestionUsuarios = new FrmGestionUsuarios(); 
+        GestionUsuarios.setVisible(true);
     }//GEN-LAST:event_btnGestionarUsuariosActionPerformed
+
+    private void btnGestionarPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarPrestamosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGestionarPrestamosActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnConsultarPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarPrestamosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnConsultarPrestamosActionPerformed
 
     /**
      * @param args the command line arguments

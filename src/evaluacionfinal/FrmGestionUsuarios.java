@@ -16,7 +16,7 @@ import java.util.logging.Level;
  */
 
 public class FrmGestionUsuarios extends javax.swing.JFrame {
-
+    
     private Usuario usuarioActual;
     public FrmGestionUsuarios() {
         initComponents();
@@ -24,6 +24,9 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
         actualizarUsuarios();
         
     }
+     
+
+    
     void actualizarTabla(ArrayList<Object> usuariosActualizados){
         DefaultTableModel modelo = (DefaultTableModel) tblUsuarios.getModel(); 
         modelo.setRowCount(0);

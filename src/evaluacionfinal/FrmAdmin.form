@@ -115,16 +115,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Gestionar Prestamos"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGestionarPrestamosActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnConsultarPrestamos">
       <Properties>
         <Property name="text" type="java.lang.String" value="Consultar prestamos"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConsultarPrestamosActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
         <Property name="text" type="java.lang.String" value="Gestionar Libros"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
