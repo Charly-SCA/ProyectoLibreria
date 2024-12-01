@@ -6,18 +6,11 @@
 package evaluacionfinal;
 
 import javax.swing.*; 
-import javax.swing.table.DefaultTableModel; 
-import java.awt.*; 
-import java.awt.event.ActionEvent; 
-import java.awt.event.ActionListener; 
-import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate; 
 import java.time.format.DateTimeFormatter; 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author charl
@@ -28,10 +21,14 @@ public class FrmSolicitud extends javax.swing.JFrame {
     /**
      * Creates new form FrmSolisitud
      */
-    public FrmSolicitud() {
+    public FrmSolicitud(ListaPrestamos formLista) {
+        initComponents();
+        this.formLista = formLista;
+    }
+    
+    public FrmSolicitud(int idPrestamo ,ListaPrestamos formLista) {
         try {
             initComponents();
-
             // Cargar solicitantes al inicializar
             ArrayList<Object> objetos = ManejadorArchivos.leerArchivo("Solicitantes.txt");
             if (objetos != null) {
@@ -40,31 +37,14 @@ public class FrmSolicitud extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "No hay solicitantes disponibles en el archivo.",
                         "Aplicación Biblioteca", JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide.",
-                    "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        try {
-            initComponents();
-
-            // Cargar solicitantes al inicializar
-            ArrayList<Object> objetos = ManejadorArchivos.leerArchivo("Libros.txt");
-            if (objetos != null) {
-                cargarLibros(objetos);
+            ArrayList<Object> objetos2 = ManejadorArchivos.leerArchivo("Libros.txt");
+            if (objetos2 != null) {
+                cargarLibros(objetos2);
             } else {
                 JOptionPane.showMessageDialog(null, "No hay libros disponibles en el archivo.",
                         "Aplicación Biblioteca", JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide.",
-                    "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    public FrmSolicitud(int idPrestamo ,ListaPrestamos formLista) {
-        try {
-            initComponents();
+            
             //Buscar esa línea en el archivo y cargar las cajas de texto
             Object objeto = ManejadorArchivos.leerObjeto("Prestamos.txt", idPrestamo);
             //Solo si la línea se encontró en el archivo carga los datos
@@ -85,10 +65,6 @@ public class FrmSolicitud extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
                         "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    FrmSolicitud(ListaPrestamos aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
@@ -113,6 +89,7 @@ public class FrmSolicitud extends javax.swing.JFrame {
         txtFechaLimite = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btnGuardarPrestamo = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -182,6 +159,13 @@ public class FrmSolicitud extends javax.swing.JFrame {
             }
         });
 
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -194,6 +178,10 @@ public class FrmSolicitud extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnGuardarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(101, 101, 101)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,11 +199,7 @@ public class FrmSolicitud extends javax.swing.JFrame {
                                 .addComponent(cboSolicitante, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(39, 39, 39)
                                 .addComponent(txtFechaLimite, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(0, 29, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(154, 154, 154)
-                .addComponent(btnGuardarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,8 +220,10 @@ public class FrmSolicitud extends javax.swing.JFrame {
                     .addComponent(btnAgregar))
                 .addGap(36, 36, 36)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addComponent(btnGuardarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGuardarPrestamo, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30))
         );
 
@@ -249,14 +235,11 @@ public class FrmSolicitud extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void cboSolicitanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSolicitanteActionPerformed
-//        ArrayList<String> listaDatos = new ArrayList<>();
-//        listaDatos.add("Elemento 1");
-//        listaDatos.add("Elemento 2");
-//        listaDatos.add("Elemento 3");
+        
     }//GEN-LAST:event_cboSolicitanteActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
+        formLista.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPrestamoActionPerformed
@@ -265,9 +248,16 @@ public class FrmSolicitud extends javax.swing.JFrame {
             //dia-mes-año
             LocalDate fechaLim = LocalDate.parse(txtFechaLimite.getText(),
                     DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            Prestamo p = new Prestamo(cboSolicitante.getSelectedItem().toString(),
-                Libro,
-                    fechaLim);
+            
+            // Obtener el solicitante seleccionado
+            String nombreSolicitante = cboSolicitante.getSelectedItem().toString();
+            Solicitante solicitante = new Solicitante(nombreSolicitante);
+            
+            // Crear un ArrayList para los libros seleccionados
+            ArrayList<Libro> librosPrestados = new ArrayList<>();
+            
+            Prestamo p = new Prestamo(solicitante, librosPrestados, fechaLim);
+            
             if (idPrestamo >= 0) {
                 //Enviamos la posición de la línea a reemplazar, el alumno con las modificaciones 
                 //en versión String y obtenemos la actualización de las líneas 
@@ -322,6 +312,10 @@ public class FrmSolicitud extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGuardarPrestamoActionPerformed
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
     public void cargarSolicitantes(ArrayList<Object> objetos) {
         try {
             ArrayList<Solicitante> soli = new ArrayList<>();
@@ -351,34 +345,34 @@ public class FrmSolicitud extends javax.swing.JFrame {
         }
     }
     
-    public void cargarLibros(ArrayList<Object> objetos) {
-        try {
-            ArrayList<Libro> lib = new ArrayList<>();
+    public void cargarLibros(ArrayList<Object> objetos2) {
+    try {
+        ArrayList<Libro> libros = new ArrayList<>();
 
-            // Convertir objetos leídos a tipo Solicitante
-            for (Object obj : objetos) {
-                if (obj instanceof Libro) {
-                    lib.add((Libro) obj);
-                }
+        // Convertir objetos leídos a tipo Libro
+        for (Object obj : objetos2) {
+            if (obj instanceof Libro) {
+                libros.add((Libro) obj);
             }
-
-            // Verificar si hay solicitantes válidos
-            if (lib.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No hay libros válidos para mostrar.",
-                        "Aplicación Biblioteca", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Poblar el combo box
-            cboSolicitante.removeAllItems();
-            for (Libro prest : lib) {
-                cboSolicitante.addItem(prest.getNombre()+" - "+prest.getAutor());
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar solicitantes: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        // Verificar si hay libros válidos
+        if (libros.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay libros válidos para mostrar.",
+                    "Aplicación Biblioteca", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Poblar el combo box de libros
+        cboLibro.removeAllItems();
+        for (Libro libro : libros) {
+            cboLibro.addItem(libro.getNombre().trim());
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al cargar libros: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
     
     /**
      * @param args the command line arguments
@@ -411,13 +405,14 @@ public class FrmSolicitud extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmSolicitud().setVisible(true);
+                //new FrmSolicitud().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardarPrestamo;
     private javax.swing.JComboBox<String> cboLibro;
     private javax.swing.JComboBox<String> cboSolicitante;

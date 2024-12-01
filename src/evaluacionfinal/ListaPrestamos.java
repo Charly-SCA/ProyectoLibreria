@@ -153,8 +153,11 @@ public class ListaPrestamos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDevolverActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        FrmSolicitud pantalla = new FrmSolicitud(this); 
-        pantalla.setVisible(true); 
+        //Enviamos la referencia a this
+        FrmSolicitud frm = new FrmSolicitud(this);
+        //mostramos el form de edición
+        frm.setVisible(true);
+        //ocultamos el form actual
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
     
