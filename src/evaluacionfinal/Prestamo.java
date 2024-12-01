@@ -29,6 +29,14 @@ public class Prestamo implements Serializable {
         this.fechaLimiteEntrega = fechaLimiteEntrega;
         this.fechaDevolucion = null;
     }
+    
+    public Prestamo(Solicitante solicitante, ArrayList<Libro> librosPrestados, LocalDate fechaLimiteEntrega) {
+        this.solicitante = solicitante;
+        this.librosPrestados = librosPrestados;
+        this.fechaPrestamo = fechaPrestamo;
+        this.fechaLimiteEntrega = fechaLimiteEntrega;
+        this.fechaDevolucion = null;
+    }
 
     public Solicitante getSolicitante() {
         return solicitante;
@@ -55,6 +63,10 @@ public class Prestamo implements Serializable {
         for (Libro libro : librosPrestados) {
             libro.setDisponible(true);
         }
+    }
+    
+    public Object[] toArray(){
+        return new Object[]{solicitante, fechaPrestamo, fechaDevolucion};
     }
 
     @Override

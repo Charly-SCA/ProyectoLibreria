@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent; 
 import java.awt.event.ActionListener; 
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate; 
 import java.time.format.DateTimeFormatter; 
 import java.util.ArrayList;
@@ -45,8 +46,29 @@ public class FrmSolicitud extends javax.swing.JFrame {
         }
     }
     
-    public FrmSolicitud(int idPrestamo ,FrmSolicitud formLista) {
-        
+    public FrmSolicitud(int idPrestamo ,ListaPrestamos formLista) {
+        try {
+            initComponents();
+            //Buscar esa línea en el archivo y cargar las cajas de texto
+            Object objeto = ManejadorArchivos.leerObjeto("Prestamos.txt", idPrestamo);
+            //Solo si la línea se encontró en el archivo carga los datos
+            if (objeto != null) {
+                this.idPrestamo = idPrestamo;
+                this.formLista = formLista;
+                Prestamo p = (Prestamo)objeto;
+                cboSolicitante.setSelectedItem(p.getSolicitante());
+                cboLibro.setEnabled(true);
+                btnAgregar.setEnabled(true);
+                txtFechaLimite.setText(p.getFechaLimiteEntrega().format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            } else {
+                //Lanzar una excepción
+                throw new NoSuchElementException("El prestamo seleccionado no se encontró");
+            }
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
+                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     FrmSolicitud(ListaPrestamos aThis) {
@@ -77,6 +99,11 @@ public class FrmSolicitud extends javax.swing.JFrame {
         btnGuardarPrestamo = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 153));
 
@@ -133,6 +160,11 @@ public class FrmSolicitud extends javax.swing.JFrame {
         jLabel4.setText("Fecha Limite");
 
         btnGuardarPrestamo.setText("Guardar Prestamo");
+        btnGuardarPrestamo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarPrestamoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -201,11 +233,78 @@ public class FrmSolicitud extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void cboSolicitanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSolicitanteActionPerformed
-        ArrayList<String> listaDatos = new ArrayList<>();
-        listaDatos.add("Elemento 1");
-        listaDatos.add("Elemento 2");
-        listaDatos.add("Elemento 3");
+//        ArrayList<String> listaDatos = new ArrayList<>();
+//        listaDatos.add("Elemento 1");
+//        listaDatos.add("Elemento 2");
+//        listaDatos.add("Elemento 3");
     }//GEN-LAST:event_cboSolicitanteActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosed
+
+    private void btnGuardarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPrestamoActionPerformed
+        try{
+            //Asumimos que la fecha fue ingresada en la caja de texto en formato
+            //dia-mes-año
+            LocalDate fechaLim = LocalDate.parse(txtFechaLimite.getText(),
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            Prestamo p = new Prestamo(cboSolicitante.getSelectedItem().toString(),
+                Libro,
+                    fechaLim);
+            if (idPrestamo >= 0) {
+                //Enviamos la posición de la línea a reemplazar, el alumno con las modificaciones 
+                //en versión String y obtenemos la actualización de las líneas 
+                ArrayList<Object> objetos = ManejadorArchivos.reemplazarObjeto("Prestamos.txt",
+                        idPrestamo, p);
+                if (objetos != null) {
+                    //Si el reemplazo se hizo correctamente informamos
+                    JOptionPane.showMessageDialog(this, "El prestamo se ha actualizado correctamente",
+                            "Gestión Prestamo", JOptionPane.INFORMATION_MESSAGE);
+                    //Actualizamos la lista
+                    formLista.actualizarTabla(objetos);
+                    //Mostramos el form de la lista
+                    formLista.setVisible(true);
+                    //Cerramos el form actual
+                    this.dispose();
+                } else {
+                    //Informar que no se hizo la operación
+                    JOptionPane.showMessageDialog(this, "La actualización no pudo ser completada",
+                            "Gestión Prestamos", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                //Enviamos a almacenar elnuevo alumno y obtenemos la actualización de las líneas 
+                ArrayList<Object> objetos = ManejadorArchivos.agregarObjeto("Alumnos.poo",
+                        p);
+                if (objetos != null) {
+                    //Si el reemplazo se hizo correctamente informamos
+                    JOptionPane.showMessageDialog(this, "El alumno se ha añadido correctamente",
+                            "Gestión de alumnos", JOptionPane.INFORMATION_MESSAGE);
+                    //Actualizamos la lista
+                    formLista.actualizarTabla(objetos);
+                    //Mostramos el form de la lista
+                    formLista.setVisible(true);
+                    //Cerramos el form actual
+                    this.dispose();
+                } else {
+                    //Informar que no se hizo la operación
+                    JOptionPane.showMessageDialog(this, "El prestamo no pudo ser agregado",
+                            "Gestión Prestamos", JOptionPane.ERROR_MESSAGE);
+               }
+            }
+        }catch(DateTimeException ex){
+            JOptionPane.showMessageDialog(this, "La fecha es obligatoria y debe tener un formato correcto (Ejemplo: 18-09-2024)",
+                        "Gestión de alumnos", JOptionPane.ERROR_MESSAGE);
+        }
+        catch(IllegalArgumentException ex){
+            JOptionPane.showMessageDialog(this, ex.getMessage(),
+                        "Gestión de alumnos", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
+                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarPrestamoActionPerformed
 
     public void cargarSolicitantes(ArrayList<Object> objetos) {
         try {
@@ -228,7 +327,7 @@ public class FrmSolicitud extends javax.swing.JFrame {
             // Poblar el combo box
             cboSolicitante.removeAllItems();
             for (Solicitante solicitante : soli) {
-                cboSolicitante.addItem(solicitante.getNombre());
+                cboSolicitante.addItem(solicitante.getNombre().trim());
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al cargar solicitantes: " + e.getMessage(),
@@ -236,6 +335,14 @@ public class FrmSolicitud extends javax.swing.JFrame {
         }
     }
     
+    public void actualizarTabla(ArrayList<Object> objetos) {
+        DefaultTableModel contenidoTabla = (DefaultTableModel) tblLibrosPrestados.getModel();
+        //Quitar cualquier fila que ya esté en la tabla 
+        contenidoTabla.setRowCount(0);
+        for (Object objeto : objetos) {
+            contenidoTabla.addRow(((Prestamo)objeto).toArray());
+        }
+    }
     /**
      * @param args the command line arguments
      */
