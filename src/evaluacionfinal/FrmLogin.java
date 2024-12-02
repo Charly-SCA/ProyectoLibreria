@@ -20,7 +20,7 @@ public class FrmLogin extends javax.swing.JFrame {
      */
     public FrmLogin() {
         initComponents(); 
-         
+        usuarios = new ArrayList<>(); 
         verificarUsuarioInicial();
         
         
