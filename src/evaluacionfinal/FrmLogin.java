@@ -49,7 +49,7 @@ public class FrmLogin extends javax.swing.JFrame {
             ArrayList<String> usuarios = GestorArchivo.leerArchivo("usuarios.txt");
             if (usuarios.isEmpty()) {
                 String contrasenaEncriptada = encriptar("Contrasenia");
-                String admin = "1%$Chuchin3000%$Erik%$Ramirez%$" + contrasenaEncriptada;
+                String admin = "1&$Chuchin3000&$Erik&$Ramirez&$" + contrasenaEncriptada;
                 GestorArchivo.agregarLinea("usuarios.txt", admin);
                 cargarUsuarios(admin);
                 JOptionPane.showMessageDialog(this, "Usuario administrador creado por defecto.");
@@ -64,7 +64,7 @@ public class FrmLogin extends javax.swing.JFrame {
             try {
         ArrayList<String> usuariosCargados = GestorArchivo.leerArchivo("usuarios.txt");
         for (String linea : usuariosCargados) {
-            String[] elementos = linea.split("%\\$");
+            String[] elementos = linea.split("&\\$");
             if (elementos.length == 5) { 
                 int clave = Integer.parseInt(elementos[0]);
                 String apodo = elementos[1];
@@ -85,7 +85,7 @@ public class FrmLogin extends javax.swing.JFrame {
             try {
         ArrayList<String> usuariosCargados = GestorArchivo.leerArchivo("usuarios.txt");
         for (String linea : usuariosCargados) {
-            String[] elementos = linea.split("%\\$");
+            String[] elementos = linea.split("&\\$");
             if (elementos.length == 5) {
                 String apodoArchivo = elementos[1];
                 String contrasenaArchivo = desencriptar(elementos[4]);
