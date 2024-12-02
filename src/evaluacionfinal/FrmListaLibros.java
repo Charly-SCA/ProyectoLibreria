@@ -19,28 +19,21 @@ public class FrmListaLibros extends javax.swing.JFrame {
      * Creates new form FrmListaLibros
      */
     public FrmListaLibros() {
-        initComponents();
         try {
             initComponents();
-            ArrayList<Object> objetos = ManejadorArchivos.leerArchivo("Libros.txt");
-            if (objetos != null) {
-                actualizarTabla(objetos);
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Error al intentar leer el archivo",
-                       "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
+            ArrayList<String> lineas=GestorArchivo.leerArchivo("Libros.txt");
+            actualizarTabla(lineas);
+        } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(),
+                        "Aplicación para gestionar empleados", JOptionPane.ERROR_MESSAGE);
         }
     }
-    public void actualizarTabla(ArrayList<Object> objetos) {
+    public void actualizarTabla(ArrayList<String> lineas){
         DefaultTableModel contenidoTabla = (DefaultTableModel) tblLibros.getModel();
-        //Quitar cualquier fila que ya esté en la tabla 
         contenidoTabla.setRowCount(0);
-        for (Object objeto : objetos) {
-            contenidoTabla.addRow(((Libro)objeto).toArray());
+        for(String linea : lineas){
+            Libro lib = new Libro(linea);
+            contenidoTabla.addRow(lib.toArray());
         }
     }
     
@@ -85,17 +78,17 @@ public class FrmListaLibros extends javax.swing.JFrame {
 
         tblLibros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Nombre", "Autor"
+                "Nombre", "Autor", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

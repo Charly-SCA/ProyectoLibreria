@@ -29,24 +29,18 @@ public class FrmLibro extends javax.swing.JFrame {
     }
     
     public FrmLibro(int idLibro ,FrmListaLibros formLista) {
-        try {
-            initComponents();
-            //Buscar esa línea en el archivo y cargar las cajas de texto
-            Object objeto = ManejadorArchivos.leerObjeto("Libros.txt", idLibro);
-            //Solo si la línea se encontró en el archivo carga los datos
-            if (objeto != null) {
-                this.idLibro = idLibro;
-                this.formLista = formLista;
-                Libro lib = (Libro)objeto;
-                txtNombreLibro.setText(lib.getNombre());
-                txtAutorLibro.setText(lib.getAutor());
-            } else {
-                //Lanzar una excepción
-                throw new NoSuchElementException("El libro seleccionado no se encontró");
-            }
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
+        initComponents();
+        
+        String linea=GestorArchivo.leerLinea("Libros.poo", idLibro);
+        
+        if(linea!=null){
+            this.idLibro = idLibro;
+            Libro lib = new Libro(linea);
+            txtNombreLibro.setText(lib.getNombre());
+            txtAutorLibro.setText(lib.getAutor());
+        }
+        else{
+            throw new NoSuchElementException("El enpleado seleccionado no se encontró");
         }
     }
     
@@ -77,6 +71,12 @@ public class FrmLibro extends javax.swing.JFrame {
         });
 
         jLabel1.setText("Nombre del Libro:");
+
+        txtNombreLibro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreLibroActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Autor del Libro:");
 
@@ -161,19 +161,19 @@ public class FrmLibro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        try{
+        
             Libro lib = new Libro(txtNombreLibro.getText(), txtAutorLibro.getText());
             if (idLibro >= 0) {
             //Enviamos la posición de la línea a reemplazar, el librp con las modificaciones 
             //en versión String y obtenemos la actualización de las líneas 
-            ArrayList<Object> objetos = ManejadorArchivos.reemplazarObjeto("Libros.txt",
-                    idLibro, lib);
-            if (objetos != null) {
+            ArrayList<String> lineas = GestorArchivo.reemplazarLinea("Libros.txt",
+                    idLibro, lib.toString());
+            if (lineas != null) {
                 //Si el reemplazo se hizo correctamente informamos
                 JOptionPane.showMessageDialog(this, "El libro se ha actualizado correctamente",
                         "Gestión Libros", JOptionPane.INFORMATION_MESSAGE);
                 //Actualizamos la lista
-                formLista.actualizarTabla(objetos);
+                formLista.actualizarTabla(lineas);
                 //Mostramos el form de la lista
                 formLista.setVisible(true);
                 //Cerramos el form actual
@@ -185,14 +185,14 @@ public class FrmLibro extends javax.swing.JFrame {
             }
         } else {
             //Enviamos a almacenar elnuevo libro y obtenemos la actualización de las líneas 
-            ArrayList<Object> objetos = ManejadorArchivos.agregarObjeto("Libros.txt",
-                    lib);
-            if (objetos != null) {
+            ArrayList<String> lineas = GestorArchivo.agregarLinea("Libros.txt",
+                    lib.toString());
+            if (lineas != null) {
                 //Si el reemplazo se hizo correctamente informamos
                 JOptionPane.showMessageDialog(this, "El libro se ha añadido correctamente",
                         "Gestión Libros", JOptionPane.INFORMATION_MESSAGE);
                 //Actualizamos la lista
-                formLista.actualizarTabla(objetos);
+                formLista.actualizarTabla(lineas);
                 //Mostramos el form de la lista
                 formLista.setVisible(true);
                 //Cerramos el form actual
@@ -203,13 +203,6 @@ public class FrmLibro extends javax.swing.JFrame {
                         "Gestión Libros", JOptionPane.ERROR_MESSAGE);
             }
         }
-        }catch(IllegalArgumentException ex){
-            JOptionPane.showMessageDialog(this, ex.getMessage(),
-                        "Gestión Libros", JOptionPane.ERROR_MESSAGE);
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
-        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -219,6 +212,10 @@ public class FrmLibro extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         formLista.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void txtNombreLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreLibroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreLibroActionPerformed
 
     /**
      * @param args the command line arguments

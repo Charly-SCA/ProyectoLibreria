@@ -9,18 +9,17 @@ package evaluacionfinal;
  *
  * @author charl
  */
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Prestamo implements Serializable {
-    private static final long serialVersionUID = 1L;
-    
-    private Solicitante solicitante;
-    private ArrayList<Libro> librosPrestados;
-    private LocalDate fechaPrestamo;
-    private LocalDate fechaLimiteEntrega;
-    private LocalDate fechaDevolucion;
+public class Prestamo {
+    public Solicitante solicitante;
+    public ArrayList<Libro> librosPrestados;
+    public LocalDate fechaPrestamo;
+    public LocalDate fechaLimiteEntrega;
+    public LocalDate fechaDevolucion;
+
+    public Prestamo() {}
 
     public Prestamo(Solicitante solicitante, ArrayList<Libro> librosPrestados, LocalDate fechaPrestamo, LocalDate fechaLimiteEntrega) {
         this.solicitante = solicitante;
@@ -33,9 +32,20 @@ public class Prestamo implements Serializable {
     public Prestamo(Solicitante solicitante, ArrayList<Libro> librosPrestados, LocalDate fechaLimiteEntrega) {
         this.solicitante = solicitante;
         this.librosPrestados = librosPrestados;
-        this.fechaPrestamo = fechaPrestamo;
         this.fechaLimiteEntrega = fechaLimiteEntrega;
         this.fechaDevolucion = null;
+    }
+
+    public Prestamo(String linea) {
+        String[] elementos = linea.split("\\&\\$");
+        this.solicitante = new Solicitante(elementos[0]);
+        this.librosPrestados = new ArrayList<>();
+        for (String libro : elementos[1].split(",")) {
+            this.librosPrestados.add(new Libro(libro.trim()));
+        }
+        this.fechaPrestamo = LocalDate.parse(elementos[2]);
+        this.fechaLimiteEntrega = LocalDate.parse(elementos[3]);
+        this.fechaDevolucion = elementos[4].equals("null") ? null : LocalDate.parse(elementos[4]);
     }
 
     public Solicitante getSolicitante() {
@@ -64,9 +74,9 @@ public class Prestamo implements Serializable {
             libro.setDisponible(true);
         }
     }
-    
+
     public Object[] toArray(){
-        return new Object[]{solicitante, fechaPrestamo, fechaDevolucion};
+        return new Object[]{solicitante.getNombre(), fechaPrestamo, fechaDevolucion != null ? fechaDevolucion : "No devuelto"};
     }
 
     @Override
@@ -75,10 +85,10 @@ public class Prestamo implements Serializable {
         for (Libro libro : librosPrestados) {
             libros.append(libro.getNombre()).append(", ");
         }
-        return "Solicitante: " + solicitante.getNombre() + ", Libros: " + libros.toString() + 
-               ", Fecha de Préstamo: " + fechaPrestamo + ", Fecha Límite de Entrega: " + fechaLimiteEntrega + 
-               ", Fecha de Devolución: " + (fechaDevolucion != null ? fechaDevolucion : "No devuelto");
+        return solicitante.getNombre() + "&$" + libros.toString().replaceAll(", $", "") + 
+               "&$" + fechaPrestamo + "&$" + fechaLimiteEntrega + "&$" + (fechaDevolucion != null ? fechaDevolucion : "null");
     }
 }
+
 
 
