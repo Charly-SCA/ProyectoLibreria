@@ -242,35 +242,32 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
                 ArrayList<String> usuarios = GestorArchivo.leerArchivo("usuarios.txt"); 
                 String lineaSeleccionada = usuarios.get(indice);
                 String[] datos = lineaSeleccionada.split("&\\$");
-                if (datos.length == 3) { 
+                if(datos.length==5){
                     Usuario usuarioSeleccionado = new Usuario(
                         Integer.parseInt(datos[0]), 
                         datos[1],                   
                         datos[2],                  
-                        datos[3]                   
-                    );
+                        datos[3],
+                        datos[4]);    
+                    ;
                     FrmUsuario pantalla = new FrmUsuario(this); 
                     pantalla.sobreescribirUsuario(usuarioSeleccionado, indice); 
                     pantalla.setVisible(true); 
                     this.setVisible(false); 
-                } else {
-                    JOptionPane.showMessageDialog(this, "Los datos del usuario están incompletos o corruptos.",
-                            "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
+
                 }
             } catch (NumberFormatException ex) {
                 Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, "Error al convertir los datos del usuario.",
-                        "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
-            } catch (ClassNotFoundException ex) { 
+                        "Gestion de Usuarios", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) { 
                 Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, "Error al cargar el usuario para modificar.",
-                        "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
-            } catch (Exception ex) {
-                Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                        "Gestion de Usuarios", JOptionPane.ERROR_MESSAGE);
             }
         } else { 
             JOptionPane.showMessageDialog(this, "Seleccione un usuario de la lista.", 
-                    "Gestión de Usuarios", JOptionPane.WARNING_MESSAGE);
+                    "Gestion de Usuarios", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnModificarUsuarioActionPerformed
 
