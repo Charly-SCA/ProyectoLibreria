@@ -126,25 +126,25 @@ public class FrmAdmin extends javax.swing.JFrame {
 
     private void btnGestionarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarUsuariosActionPerformed
         this.dispose();
-        FrmGestionUsuarios GestionUsuarios = new FrmGestionUsuarios(); 
+        FrmGestionUsuarios GestionUsuarios = new FrmGestionUsuarios(this); 
         GestionUsuarios.setVisible(true);
     }//GEN-LAST:event_btnGestionarUsuariosActionPerformed
 
     private void btnGestionarPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarPrestamosActionPerformed
         this.dispose();
-        ListaPrestamos GestionUsuarios = new ListaPrestamos(); 
+        ListaPrestamos GestionUsuarios = new ListaPrestamos(this); 
         GestionUsuarios.setVisible(true);
     }//GEN-LAST:event_btnGestionarPrestamosActionPerformed
 
     private void btnGestionarLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarLibrosActionPerformed
         this.dispose();
-        FrmListaLibros GestionUsuarios = new FrmListaLibros(); 
+        FrmListaLibros GestionUsuarios = new FrmListaLibros(this); 
         GestionUsuarios.setVisible(true);
     }//GEN-LAST:event_btnGestionarLibrosActionPerformed
 
     private void btnResumenDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResumenDiaActionPerformed
         this.dispose();
-        FrmResumenDia GestionUsuarios = new FrmResumenDia(); 
+        FrmResumenDia GestionUsuarios = new FrmResumenDia(this); 
         GestionUsuarios.setVisible(true);
     }//GEN-LAST:event_btnResumenDiaActionPerformed
 

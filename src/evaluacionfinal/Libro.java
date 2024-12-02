@@ -8,14 +8,14 @@ package evaluacionfinal;
 public class Libro {
     private String nombre;
     private String autor;
-    private String disponible; 
+    private String disponible = "Disponible"; 
 
     public Libro() {}
 
     public Libro(String nombre, String autor, String disponibilidad) {
-        this.nombre = nombre;
-        this.autor = autor;
-        this.disponible = disponibilidad;
+        setNombre(nombre);
+        setAutor(autor);
+        setDisponible(disponible);
     }
 
     public Libro(String linea) {
@@ -24,6 +24,11 @@ public class Libro {
         this.autor = elementos[1];
         this.disponible = elementos[2];
     }
+    
+    public Libro(String linea, int n) {
+        this.nombre = linea;
+    }   
+    
 
     public String getNombre() { 
         return nombre; 
@@ -66,9 +71,6 @@ public class Libro {
         return nombre + "&$" + autor + "&$" + disponible;
     }
 
-    void setDisponible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
 
 

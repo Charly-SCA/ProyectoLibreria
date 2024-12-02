@@ -13,25 +13,26 @@ import javax.swing.table.DefaultTableModel;
  * @author RAUL
  */
 public class ListaPrestamos extends javax.swing.JFrame {
+    public FrmAdmin frmMenu;
     
-    public ListaPrestamos() {
-        try { 
-            initComponents(); 
-            ArrayList<String> lineas = GestorArchivo.leerArchivo("Prestamos.txt"); 
-            actualizarTabla(lineas); 
-        } catch (Exception ex) { 
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Aplicacion para gestionar préstamos", 
-                    JOptionPane.ERROR_MESSAGE);     
-        }
+    public ListaPrestamos(FrmAdmin frmMenu) {
+        try {
+            initComponents();
+            this.frmMenu=frmMenu;
+            ArrayList<String> lineas=GestorArchivo.leerArchivo("Prestamos.txt");
+            actualizarTabla(lineas);
+        } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(),"Aplicación para gestionar prestamos", 
+                        JOptionPane.ERROR_MESSAGE);
+        }   
     }
-    
-    public void actualizarTabla(ArrayList<String> lineas) { 
-        DefaultTableModel contenidoTabla = (DefaultTableModel) tblPrestamos.getModel(); 
-        contenidoTabla.setRowCount(0); 
-        for (String linea : lineas) {
-            Prestamo prestamo = new Prestamo(linea); 
-            contenidoTabla.addRow(prestamo.toArray()); 
-        } 
+    public void actualizarTabla(ArrayList<String> lineas){
+        DefaultTableModel contenidoTabla = (DefaultTableModel) tblPrestamos.getModel();
+        contenidoTabla.setRowCount(0);
+        for(String linea : lineas){
+            Prestamo e = new Prestamo(linea);
+           contenidoTabla.addRow(e.toArray());
+        }
     }
     
     /**
@@ -79,11 +80,11 @@ public class ListaPrestamos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Solicitante", "Fecha", "Estado"
+                "Solicitante", "Fecha Prestamo", "Fecha Entrega", "Estado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -127,8 +128,8 @@ public class ListaPrestamos extends javax.swing.JFrame {
                 .addComponent(btnConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(210, 210, 210))
             .addGroup(layout.createSequentialGroup()
-                .addGap(111, 111, 111)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 712, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -156,7 +157,7 @@ public class ListaPrestamos extends javax.swing.JFrame {
         int indice = tblPrestamos.getSelectedRow();
         if (indice >= 0){
         //todo el codigo para devolver libros considerando que si un préstamo se devuelve, deberá marcarse el préstamo y además se deberá actualizar la disponibilidad de cada libro incluido en él.
-
+            
         }
     }//GEN-LAST:event_btnDevolverActionPerformed
 
@@ -199,7 +200,7 @@ public class ListaPrestamos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListaPrestamos().setVisible(true);
+                //new ListaPrestamos().setVisible(true);
             }
         });
     }

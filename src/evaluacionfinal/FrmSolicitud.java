@@ -37,10 +37,8 @@ public class FrmSolicitud extends javax.swing.JFrame {
         initComponents();
         
         // Cargar solicitantes al inicializar
-        //cargarSolicitantes();
         cargarSolicitantes("Solicitantes.txt", cboSolicitante);
         // Cargar libros al inicializar
-        //cargarLibros();
         cargarLibros("Libros.txt", cboLibro);
     }
     //public FrmSolicitud(int idPrestamo ,ListaPrestamos formLista) {
@@ -293,7 +291,7 @@ public class FrmSolicitud extends javax.swing.JFrame {
     }//GEN-LAST:event_cboSolicitanteActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        //formLista.setVisible(true);
+        formLista.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarPrestamoActionPerformed
@@ -304,7 +302,7 @@ public class FrmSolicitud extends javax.swing.JFrame {
         String fechaPrestamoString = fechaPrestamo.format(formatter);
         String fechaLimiteString = txtFechaLimite.getText();
         LocalDate fechaLimite = LocalDate.parse(fechaLimiteString, formatter);
-
+        
         Solicitante solicitante = null;
         for (String linea : GestorArchivo.leerArchivo("Solicitantes.txt")) {
             Solicitante s = new Solicitante(linea);
@@ -313,106 +311,52 @@ public class FrmSolicitud extends javax.swing.JFrame {
                 break;
             }
         }
+        System.out.println(solicitante);
         
-        String devolucion = "No devuelto";
-        Prestamo prestamo = new Prestamo(solicitante, librosPrestados, fechaPrestamo, fechaLimite, devolucion);
-        BufferedWriter writer = new BufferedWriter(new FileWriter("Prestamos.txt", true));
-        writer.write(prestamo.toString() + "\n");
-        writer.close();
-
-        // Actualizar disponibilidad de los libros prestados y recargar el combo box
+        //String devolucion = "No devuelto";
+        Prestamo prestamo = new Prestamo();
+          
+        prestamo.setSolicitante(solicitante);
+        //Actualizar disponibilidad de los libros prestados y recargar el combo box
         for (Libro libro : librosPrestados) {
             libro.setDisponible("No Disponible");
         }
-        actualizarLibros();
+        //actualizarLibros();
         cargarLibros("Libros.txt", cboLibro);
-
+        prestamo.setLibrosPrestados(librosPrestados);
+        prestamo.setFechaPrestamo(fechaPrestamo);
+        prestamo.setFechaLimiteEntrega(fechaLimiteString);
+        prestamo.setFechaDev(fechaLimite);
+        
+//        System.out.println(librosPrestados);
+//        System.out.println(fechaPrestamo);
+//        System.out.println(fechaLimiteString);
+//        System.out.println(fechaLimite);
+        
+        ArrayList<String> linea = GestorArchivo.agregarLinea("Prestamos.txt",
+                                prestamo.toString());
+        
+        //System.out.println(linea);
+        
         JOptionPane.showMessageDialog(null, "Préstamo guardado exitosamente.",
                 "Confirmación", JOptionPane.INFORMATION_MESSAGE);
 
-        dispose();
+        //formLista.setVisible(true);
+        //formLista.actualizarTabla(GestorArchivo.leerArchivo("Prestamos.txt"));
+        //Actualizamos la lista
+        //formLista.actualizarTabla(linea);
+        //Mostramos el form de la lista
         formLista.setVisible(true);
-        formLista.actualizarTabla(GestorArchivo.leerArchivo("Prestamos.txt"));
+        //Cerramos el form actual
+        this.dispose();
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(null, "Error al guardar el préstamo: " + ex.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
     }
-
-
-
-        
-        
-
-//        try{
-//            //Asumimos que la fecha fue ingresada en la caja de texto en formato
-//            //dia-mes-año
-//            LocalDate fechaLim = LocalDate.parse(txtFechaLimite.getText(),
-//                    DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-//            
-//            // Obtener el solicitante seleccionado
-//            String nombreSolicitante = cboSolicitante.getSelectedItem().toString();
-//            Solicitante solicitante = new Solicitante(nombreSolicitante);
-//            
-//            // Crear un ArrayList para los libros seleccionados
-//            ArrayList<Libro> librosPrestados = new ArrayList<>();
-//            
-//            Prestamo p = new Prestamo(solicitante, librosPrestados, fechaLim);
-//            
-//            if (idPrestamo >= 0) {
-//                //Enviamos la posición de la línea a reemplazar, el alumno con las modificaciones 
-//                //en versión String y obtenemos la actualización de las líneas 
-//                ArrayList<Object> objetos = ManejadorArchivos.reemplazarObjeto("Prestamos.txt",
-//                        idPrestamo, p);
-//                if (objetos != null) {
-//                    //Si el reemplazo se hizo correctamente informamos
-//                    JOptionPane.showMessageDialog(this, "El prestamo se ha actualizado correctamente",
-//                            "Gestión Prestamo", JOptionPane.INFORMATION_MESSAGE);
-//                    //Actualizamos la lista
-//                    formLista.actualizarTabla(objetos);
-//                    //Mostramos el form de la lista
-//                    formLista.setVisible(true);
-//                    //Cerramos el form actual
-//                    this.dispose();
-//                } else {
-//                    //Informar que no se hizo la operación
-//                    JOptionPane.showMessageDialog(this, "La actualización no pudo ser completada",
-//                            "Gestión Prestamos", JOptionPane.ERROR_MESSAGE);
-//                }
-//            } else {
-//                //Enviamos a almacenar elnuevo alumno y obtenemos la actualización de las líneas 
-//                ArrayList<Object> objetos = ManejadorArchivos.agregarObjeto("Prestamos.txt",
-//                        p);
-//                if (objetos != null) {
-//                    //Si el reemplazo se hizo correctamente informamos
-//                    JOptionPane.showMessageDialog(this, "El prestamo se ha añadido correctamente",
-//                            "Gestión Prestamos", JOptionPane.INFORMATION_MESSAGE);
-//                    //Actualizamos la lista
-//                    formLista.actualizarTabla(objetos);
-//                    //Mostramos el form de la lista
-//                    formLista.setVisible(true);
-//                    //Cerramos el form actual
-//                    this.dispose();
-//                } else {
-//                    //Informar que no se hizo la operación
-//                    JOptionPane.showMessageDialog(this, "El prestamo no pudo ser agregado",
-//                            "Gestión Prestamos", JOptionPane.ERROR_MESSAGE);
-//               }
-//            }
-//        }catch(DateTimeException ex){
-//            JOptionPane.showMessageDialog(this, "La fecha es obligatoria y debe tener un formato correcto (Ejemplo: 18-09-2024)",
-//                        "Gestión Prestamos", JOptionPane.ERROR_MESSAGE);
-//        }
-//        catch(IllegalArgumentException ex){
-//            JOptionPane.showMessageDialog(this, ex.getMessage(),
-//                        "Gestión Prestamos", JOptionPane.ERROR_MESSAGE);
-//        }
-//        catch (ClassNotFoundException ex) {
-//            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-//                        "Aplicación Bliblioteca", JOptionPane.ERROR_MESSAGE);
-//        }
     }//GEN-LAST:event_btnGuardarPrestamoActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        formLista.setVisible(true); 
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
@@ -460,105 +404,33 @@ public class FrmSolicitud extends javax.swing.JFrame {
     }
     
     private void actualizarLibros() {
-        try {
-            ArrayList<String> lineas = GestorArchivo.leerArchivo("Libros.txt");
-            ArrayList<String> nuevasLineas = new ArrayList<>();
+    try {
+        ArrayList<String> lineas = GestorArchivo.leerArchivo("Libros.txt");
+        ArrayList<String> nuevasLineas = new ArrayList<>();
 
-            for (String linea : lineas) {
-                Libro libro = new Libro(linea);
-                for (Libro prestado : librosPrestados) {
-                    if (libro.getNombre().equals(prestado.getNombre())) {
-                        libro.setDisponible("No Disponible");
-                    }
-                }
-                nuevasLineas.add(libro.toString());
-            }
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Libros.txt"))) {
-                for (String nuevaLinea : nuevasLineas) {
-                    writer.write(nuevaLinea + "\n");
+        for (String linea : lineas) {
+            Libro libro = new Libro(linea);
+            for (Libro prestado : librosPrestados) {
+                if (libro.getNombre().equals(prestado.getNombre())) {
+                    libro.setDisponible("No Disponible");
                 }
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error al actualizar los libros: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            nuevasLineas.add(libro.toString());
         }
-    }
 
-    
-//    private void agregarLibro() { 
-//        String libroSeleccionado = (String) cboLibros.getSelectedItem(); 
-//        if (libroSeleccionado != null) { 
-//            try {
-//                DefaultTableModel model = (DefaultTableModel) tblLibrosPrestados.getModel();
-//                for (String libro : GestorArchivo.leerArchivo("Libros.txt")) {
-//                    Libro l = new Libro(libro);
-//                    if (l.toString().equals(libroSeleccionado)) {
-//                        librosPrestados.add(l);
-//                        model.addRow(new Object[]{l.getNombre(), l.getAutor()});
-//                        break;
-//                    } 
-//                }
-//            } catch (Exception ex) {
-//                Logger.getLogger(FrmSolicitud.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        } 
-//    }
-    
-//    private void actualizarLibros() { 
-//        ArrayList<String> lineas = GestorArchivo.leerArchivo("Libros.txt"); 
-//        ArrayList<String> nuevasLineas = new ArrayList<>(); 
-//        for (String linea : lineas) { 
-//            Libro libro = new Libro(linea); 
-//            for (Libro prestado : librosPrestados) { 
-//                if (libro.getNombre().equals(prestado.getNombre())) { 
-//                    libro.setDisponible(false); 
-//                } 
-//            } 
-//            nuevasLineas.add(libro.toString()); 
-//        } 
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Libros.txt"))) { 
-//            for (String nuevaLinea : nuevasLineas) { 
-//                writer.write(nuevaLinea + "\n"); 
-//            } 
-//        } catch (Exception ex) { 
-//            JOptionPane.showMessageDialog(null, "Error al actualizar los libros: " + ex.getMessage(), 
-//                    "Error", JOptionPane.ERROR_MESSAGE); 
-//        } 
-//    }
-    
-    /*
-    public void cargarSolicitantes(String Archivo, JComboBox<String> cbo) {
-        try {
-            ArrayList<String> lineas = GestorArchivo.leerArchivo(Archivo);
-
-            // Poblar el combo box
-            cbo.removeAllItems();
-            for (String linea : lineas) {
-                cbo.addItem(linea.trim());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Libros.txt"))) {
+            for (String nuevaLinea : nuevasLineas) {
+                writer.write(nuevaLinea + "\n");
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar solicitantes: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-    
-    public void cargarLibros(String Archivo, JComboBox<String> cbo) {
-        try {
-            ArrayList<String> lineas = GestorArchivo.leerArchivo(Archivo);
-
-            // Poblar el combo box
-            cbo.removeAllItems();
-            for (String linea : lineas) {
-                cbo.addItem(linea.trim());
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al cargar libros: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Error al actualizar los libros: " + ex.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
- */
+
+    
+
     
     /**
      * @param args the command line arguments

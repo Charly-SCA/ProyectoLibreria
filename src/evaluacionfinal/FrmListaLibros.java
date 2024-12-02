@@ -15,17 +15,20 @@ import javax.swing.table.DefaultTableModel;
  */
 public class FrmListaLibros extends javax.swing.JFrame {
 
+    private FrmAdmin frmMenu;
     /**
      * Creates new form FrmListaLibros
+     * @param frmMenu
      */
-    public FrmListaLibros() {
+    public FrmListaLibros(FrmAdmin frmMenu) {
         try {
             initComponents();
+            this.frmMenu = frmMenu;
             ArrayList<String> lineas=GestorArchivo.leerArchivo("Libros.txt");
             actualizarTabla(lineas);
         } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(),
-                        "Aplicación para gestionar empleados", JOptionPane.ERROR_MESSAGE);
+                        "Aplicación Biblioteca", JOptionPane.ERROR_MESSAGE);
         }
     }
     public void actualizarTabla(ArrayList<String> lineas){
@@ -51,6 +54,8 @@ public class FrmListaLibros extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblLibros = new javax.swing.JTable();
         btnAgregarLibro = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,6 +114,20 @@ public class FrmListaLibros extends javax.swing.JFrame {
             }
         });
 
+        btnEditar.setText("Editar Libro");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -118,7 +137,10 @@ public class FrmListaLibros extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addComponent(btnAgregarLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnAgregarLibro, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                    .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(48, 48, 48))
         );
         layout.setVerticalGroup(
@@ -128,7 +150,12 @@ public class FrmListaLibros extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAgregarLibro))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAgregarLibro)
+                        .addGap(29, 29, 29)
+                        .addComponent(btnEditar)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnCancelar)))
                 .addContainerGap(81, Short.MAX_VALUE))
         );
 
@@ -145,15 +172,25 @@ public class FrmListaLibros extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarLibroActionPerformed
 
     private void tblLibrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLibrosMouseClicked
-        if (evt.getClickCount() == 2) {
-            //Enviamos la fila seleccionada y la referencia a this
-            FrmLibro frm = new FrmLibro(tblLibros.getSelectedRow(), this);
-            //mostramos el form de edición
-            frm.setVisible(true);
-            //ocultamos el form actual
-            this.setVisible(false);
-        }
+     
     }//GEN-LAST:event_tblLibrosMouseClicked
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int indice=tblLibros.getSelectedRow();
+        if(indice!=-1){
+            //Cargar el otro formulario
+            FrmLibro pantalla=new FrmLibro(indice,this);
+            pantalla.setVisible(true);
+            this.setVisible(false);
+        }else{
+            JOptionPane.showMessageDialog(this,"Selecciona un libro de la lista","Gestión Libros",JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        frmMenu.setVisible(true); 
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -185,13 +222,15 @@ public class FrmListaLibros extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmListaLibros().setVisible(true);
+                //new FrmListaLibros().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarLibro;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -13,11 +13,13 @@ import java.util.ArrayList;
  */
 public class FrmResumenDia extends javax.swing.JFrame {
 
+    private FrmAdmin frmMenu;
     /**
      * Creates new form FrmResumenDia
      */
-    public FrmResumenDia() {
+    public FrmResumenDia(FrmAdmin frmMenu) {
         initComponents();
+        this.frmMenu = frmMenu;
     }
     
 
@@ -39,6 +41,7 @@ public class FrmResumenDia extends javax.swing.JFrame {
         btnGenerarResumen = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtAreaResumen = new javax.swing.JTextArea();
+        btnCancelar = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -81,6 +84,13 @@ public class FrmResumenDia extends javax.swing.JFrame {
         txtAreaResumen.setRows(5);
         jScrollPane2.setViewportView(txtAreaResumen);
 
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -88,16 +98,19 @@ public class FrmResumenDia extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(lblFechaConsulta)
-                .addGap(41, 41, 41)
-                .addComponent(txtFechaConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65)
-                .addComponent(btnGenerarResumen, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(92, 92, 92))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(92, 92, 92))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblFechaConsulta)
+                        .addGap(41, 41, 41)
+                        .addComponent(txtFechaConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65)
+                        .addComponent(btnGenerarResumen, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(52, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,8 +121,13 @@ public class FrmResumenDia extends javax.swing.JFrame {
                     .addComponent(lblFechaConsulta)
                     .addComponent(txtFechaConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGenerarResumen))
-                .addGap(32, 32, 32)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(btnCancelar)))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
 
@@ -132,9 +150,9 @@ public class FrmResumenDia extends javax.swing.JFrame {
                 prestamosRealizados++;
             }
 
-            if (prestamo.getFechaDevolucion() != null && 
-                !prestamo.getFechaDevolucion().isEmpty() && 
-                LocalDate.parse(prestamo.getFechaDevolucion()).equals(fecha)) {
+            if (prestamo.getFechaDev()!= null && 
+                !prestamo.getFechaDev().isEmpty() && 
+                LocalDate.parse(prestamo.getFechaDev()).equals(fecha)) {
                 devolucionesRealizadas++;
             }
         }
@@ -148,6 +166,11 @@ public class FrmResumenDia extends javax.swing.JFrame {
         txtAreaResumen.setText("Error: Verifique que la fecha sea valida (formato: YYYY-MM-DD) y que el archivo exista.");
     }
     }//GEN-LAST:event_btnGenerarResumenActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        frmMenu.setVisible(true); 
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,12 +202,13 @@ public class FrmResumenDia extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmResumenDia().setVisible(true);
+                //new FrmResumenDia().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGenerarResumen;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

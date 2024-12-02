@@ -20,9 +20,12 @@ import javax.swing.JTable;
 public class FrmGestionUsuarios extends javax.swing.JFrame {
     
     private Usuario usuarioActual;
-    public FrmGestionUsuarios() {
+    private FrmAdmin frmMenu;
+    
+    public FrmGestionUsuarios(FrmAdmin frmMenu) {
         try {
             initComponents();
+            this.frmMenu = frmMenu;
             ArrayList<String> lineas=GestorArchivo.leerArchivo("usuarios.txt");
             actualizarUsuarios();
 
@@ -79,8 +82,14 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
         btnAgregarUsuario = new javax.swing.JButton();
         btnEliminarUsuario = new javax.swing.JButton();
         btnModificarUsuario = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 51, 51));
 
@@ -119,6 +128,13 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
             }
         });
 
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -128,7 +144,8 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnModificarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEliminarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAgregarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAgregarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -151,11 +168,13 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addComponent(btnEliminarUsuario)
                         .addGap(29, 29, 29)
-                        .addComponent(btnModificarUsuario))
+                        .addComponent(btnModificarUsuario)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnCancelar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -223,7 +242,7 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
                 ArrayList<String> usuarios = GestorArchivo.leerArchivo("usuarios.txt"); 
                 String lineaSeleccionada = usuarios.get(indice);
                 String[] datos = lineaSeleccionada.split("&\\$");
-                if (datos.length == 4) { 
+                if (datos.length == 3) { 
                     Usuario usuarioSeleccionado = new Usuario(
                         Integer.parseInt(datos[0]), 
                         datos[1],                   
@@ -254,6 +273,15 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
                     "Gestión de Usuarios", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnModificarUsuarioActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        frmMenu.setVisible(true);
+    }//GEN-LAST:event_formWindowClosed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        frmMenu.setVisible(true); 
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -286,13 +314,14 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmGestionUsuarios().setVisible(true);
+                //new FrmGestionUsuarios().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarUsuario;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminarUsuario;
     private javax.swing.JButton btnModificarUsuario;
     private javax.swing.JLabel jLabel1;
