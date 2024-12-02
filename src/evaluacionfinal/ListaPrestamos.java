@@ -13,27 +13,27 @@ import javax.swing.table.DefaultTableModel;
  * @author RAUL
  */
 public class ListaPrestamos extends javax.swing.JFrame {
-
-    /**
-     * Creates new form ListaPrestamos
-     */
+    
     public ListaPrestamos() {
-        try {
-            initComponents();
-            ArrayList<Object> objetos = ManejadorArchivos.leerArchivo("Prestamos.txt");
-            if (objetos != null) {
-                actualizarTabla(objetos);
-            }
-//            else {
-//                JOptionPane.showMessageDialog(null, "Error al intentar leer el archivo",
-//                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
-//            }
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "El formato del archivo de almacenamiento no coincide",
-                        "Aplicación para gestionar alumnos", JOptionPane.ERROR_MESSAGE);
+        try { 
+            initComponents(); 
+            ArrayList<String> lineas = GestorArchivo.leerArchivo("Prestamos.txt"); 
+            actualizarTabla(lineas); 
+        } catch (Exception ex) { 
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Aplicacion para gestionar préstamos", 
+                    JOptionPane.ERROR_MESSAGE);     
         }
     }
-
+    
+    public void actualizarTabla(ArrayList<String> lineas) { 
+        DefaultTableModel contenidoTabla = (DefaultTableModel) tblPrestamos.getModel(); 
+        contenidoTabla.setRowCount(0); 
+        for (String linea : lineas) {
+            Prestamo prestamo = new Prestamo(linea); 
+            contenidoTabla.addRow(prestamo.toArray()); 
+        } 
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,7 +81,15 @@ public class ListaPrestamos extends javax.swing.JFrame {
             new String [] {
                 "Solicitante", "Fecha", "Estado"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblPrestamos);
 
         btnAgregar.setText("Agregar");
@@ -161,15 +169,6 @@ public class ListaPrestamos extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
     
-    
-    public void actualizarTabla(ArrayList<Object> objetos) {
-        DefaultTableModel contenidoTabla = (DefaultTableModel) tblPrestamos.getModel();
-        //Quitar cualquier fila que ya esté en la tabla 
-        contenidoTabla.setRowCount(0);
-        for (Object objeto : objetos) {
-            contenidoTabla.addRow(((Prestamo)objeto).toArray());
-        }
-    }
     /**
      * @param args the command line arguments
      */

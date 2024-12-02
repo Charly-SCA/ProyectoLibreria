@@ -8,20 +8,21 @@ package evaluacionfinal;
 public class Libro {
     private String nombre;
     private String autor;
-    private boolean disponible = true; // Por defecto disponible
+    private String disponible; 
 
     public Libro() {}
 
-    public Libro(String nombre, String autor) {
+    public Libro(String nombre, String autor, String disponibilidad) {
         this.nombre = nombre;
         this.autor = autor;
+        this.disponible = disponibilidad;
     }
 
     public Libro(String linea) {
         String[] elementos = linea.split("\\&\\$");
         this.nombre = elementos[0];
         this.autor = elementos[1];
-        this.disponible = Boolean.parseBoolean(elementos[2]);
+        this.disponible = elementos[2];
     }
 
     public String getNombre() { 
@@ -48,11 +49,12 @@ public class Libro {
         }
     }
 
-    public boolean isDisponible() { 
-        return disponible; 
+    public String getDisponible() {
+        return disponible;
     }
-    public void setDisponible(boolean disponible) { 
-        this.disponible = disponible; 
+
+    public void setDisponible(String disponible) {
+        this.disponible = disponible;
     }
 
     public Object[] toArray(){
@@ -62,6 +64,10 @@ public class Libro {
     @Override
     public String toString() {
         return nombre + "&$" + autor + "&$" + disponible;
+    }
+
+    void setDisponible(boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
 
