@@ -202,55 +202,59 @@ public class FrmUsuario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-       boolean esvalido = true; 
-       String clavev = txtClave.getText(); 
-       if (!clavev.matches("\\d+")) { 
-           JOptionPane.showMessageDialog(this, "La clave debe ser un numero", 
-                   "Error", JOptionPane.ERROR_MESSAGE); 
-           esvalido = false; 
-       }  
-       if(txtClave.getText().isEmpty() || txtApodo.getText().isEmpty() || txtNombre.getText().isEmpty() 
-               || txtApellidos.getText().isEmpty() || txtContrasena.getText().isEmpty()){ 
-           JOptionPane.showMessageDialog(this, "Todas las casillas deben estar llenas.", 
-                   "Gestion de Usuarios", JOptionPane.WARNING_MESSAGE);
-           esvalido = false;  
-       } 
-        if (esvalido) { 
-        try { 
-            int clave = Integer.parseInt(clavev); 
-            String contrasenaEncriptada = encriptar(txtContrasena.getText());
-            Usuario nuevoUsuario = new Usuario(clave, txtApodo.getText(), txtNombre.getText(), txtApellidos.getText(), 
-                    contrasenaEncriptada);
-            if (indice >= 0){ 
-                try { 
-                    ArrayList<Object> usuariosActualizados = ManejadorArchivos.reemplazarObjeto("usuarios.txt", indice, nuevoUsuario); 
-                    if (usuariosActualizados != null){ 
-                        JOptionPane.showMessageDialog(this, "El usuario se ha actualizado correctamente",
-                                "Gestion de Usuarios", JOptionPane.INFORMATION_MESSAGE); 
-                        formLista.actualizarUsuarios();
-                        formLista.setVisible(true); 
-                        this.dispose(); 
-                    }else { 
-                        JOptionPane.showMessageDialog(this, "La actualizacion no pudo ser completada", 
-                                "Gestion de Usuarios", JOptionPane.ERROR_MESSAGE); 
-                    } } catch (Exception ex) {
-                        Logger.getLogger(FrmUsuario.class.getName()).log(Level.SEVERE, null, ex); } 
-            }else { 
-                try { 
-                    ArrayList<Object> usuariosActualizados = ManejadorArchivos.agregarObjeto("usuarios.txt", nuevoUsuario); 
-                    if (usuariosActualizados != null) { JOptionPane.showMessageDialog(this, "El usuario se ha añadido correctamente", 
-                            "Gestion de Usuarios", JOptionPane.INFORMATION_MESSAGE); 
-                    formLista.actualizarUsuarios(); formLista.setVisible(true); 
-                    this.dispose(); } else { JOptionPane.showMessageDialog(this, "El usuario no pudo ser agregado",
-                            "Gestion de Usuarios", 
-                            JOptionPane.ERROR_MESSAGE); } 
-                } catch (Exception ex){ 
-                    Logger.getLogger(FrmUsuario.class.getName()).log(Level.SEVERE, null, ex); 
-                } 
-            } 
-        } catch (NumberFormatException ex){ 
-            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), 
+    boolean esvalido = true; 
+        String clavev = txtClave.getText(); 
+        if (!clavev.matches("\\d+")) { 
+            JOptionPane.showMessageDialog(this, "La clave debe ser un número", 
                     "Error", JOptionPane.ERROR_MESSAGE); 
+            esvalido = false; 
+        }  
+        if (txtClave.getText().isEmpty() || txtApodo.getText().isEmpty() || txtNombre.getText().isEmpty() 
+                || txtApellidos.getText().isEmpty() || txtContrasena.getText().isEmpty()) { 
+            JOptionPane.showMessageDialog(this, "Todas las casillas deben estar llenas.", 
+                    "Gestion de Usuarios", JOptionPane.WARNING_MESSAGE);
+            esvalido = false;  
+        } 
+        
+        if (esvalido) { 
+            try { 
+                int clave = Integer.parseInt(clavev); 
+                String contrasenaEncriptada = encriptar(txtContrasena.getText());
+                String usuarioFormato = clave + "&$" + txtApodo.getText() + "&$" + 
+                                         txtNombre.getText() + "&$" + txtApellidos.getText() + "&$" + 
+                                         contrasenaEncriptada;
+                if (indice >= 0) { 
+                    try { 
+                        ArrayList<String> usuariosActualizados = GestorArchivo.reemplazarLinea("usuarios.txt", indice, usuarioFormato); 
+                        if (usuariosActualizados != null) { 
+                            JOptionPane.showMessageDialog(this, "El usuario se ha actualizado correctamente",
+                                    "Gestion de Usuarios", JOptionPane.INFORMATION_MESSAGE); 
+                            formLista.actualizarUsuarios();
+                            formLista.setVisible(true); 
+                            this.dispose(); 
+                        } else { 
+                            JOptionPane.showMessageDialog(this, "La actualización no pudo ser completada", 
+                                    "Gestion de Usuarios", JOptionPane.ERROR_MESSAGE); 
+                        } 
+                    } catch (Exception ex) {
+                        Logger.getLogger(FrmUsuario.class.getName()).log(Level.SEVERE, null, ex); 
+                    } 
+                } else { 
+                    try { 
+                        ArrayList<String> resultado = GestorArchivo.agregarLinea("usuarios.txt", usuarioFormato);
+                            JOptionPane.showMessageDialog(this, "El usuario se ha añadido correctamente", 
+                                    "Gestión de Usuarios", JOptionPane.INFORMATION_MESSAGE); 
+                            formLista.actualizarUsuarios(); 
+                            formLista.setVisible(true); 
+                            this.dispose(); 
+                        
+                    } catch (Exception ex) { 
+                        Logger.getLogger(FrmUsuario.class.getName()).log(Level.SEVERE, null, ex); 
+                    } 
+                } 
+            } catch (NumberFormatException ex) { 
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE); 
             }
         }
     }//GEN-LAST:event_btnAceptarActionPerformed

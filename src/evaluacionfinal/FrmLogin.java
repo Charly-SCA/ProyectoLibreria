@@ -7,6 +7,7 @@ package evaluacionfinal;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author charl
@@ -19,7 +20,7 @@ public class FrmLogin extends javax.swing.JFrame {
      */
     public FrmLogin() {
         initComponents(); 
-        usuarios = new ArrayList<>(); 
+         
         verificarUsuarioInicial();
         
         
@@ -42,40 +43,62 @@ public class FrmLogin extends javax.swing.JFrame {
         } return desencriptada; 
     }
     
+    
     private void verificarUsuarioInicial() { 
-        cargarUsuarios(); 
-        if (usuarios.isEmpty()){
-            Usuario admin = new Usuario(1, "Chuchin3000", "Erik", "Ramirez", encriptar("Contrasenia"));
-                usuarios.add(admin);
-            try{
-                ManejadorArchivos.agregarObjeto("usuarios.txt", admin);
-            }catch(ClassNotFoundException ex){
-                JOptionPane.showMessageDialog(this, "No se ha podido agregar el usuario");
+        try {
+            ArrayList<String> usuarios = GestorArchivo.leerArchivo("usuarios.txt");
+            if (usuarios.isEmpty()) {
+                String contrasenaEncriptada = encriptar("Contrasenia");
+                String admin = "1%$Chuchin3000%$Erik%$Ramirez%$" + contrasenaEncriptada;
+                GestorArchivo.agregarLinea("usuarios.txt", admin);
+                cargarUsuarios(admin);
+                JOptionPane.showMessageDialog(this, "Usuario administrador creado por defecto.");
+                
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al verificar el usuario inicial: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    private void cargarUsuarios(String admin) { 
+            try {
+        ArrayList<String> usuariosCargados = GestorArchivo.leerArchivo("usuarios.txt");
+        for (String linea : usuariosCargados) {
+            String[] elementos = linea.split("%\\$");
+            if (elementos.length == 5) { 
+                int clave = Integer.parseInt(elementos[0]);
+                String apodo = elementos[1];
+                String nombre = elementos[2];
+                String apellidos = elementos[3];
+                String contrasena = elementos[4];
+                usuarios.add(new Usuario(clave, apodo, nombre, apellidos, contrasena));
             }
         }
-    }
-    private void cargarUsuarios() { 
-        try { 
-            ArrayList<Object> usuariosCargados = ManejadorArchivos.leerArchivo("usuarios.txt");
-            for (Object obj : usuariosCargados) { 
-                if (obj instanceof Usuario) { 
-                    usuarios.add((Usuario) obj);
-                } 
-            }
-        } catch (ClassNotFoundException ex){ 
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar los usuarios",
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } 
-    }
+            usuarios = new ArrayList<>();
+        }
+     }
     
     private boolean verificarCredenciales(String apodo, String contrasena){ 
-        for (Usuario usuario : usuarios){
-            String contrasenaDesencriptada = desencriptar(usuario.getContrasena());
-            if (usuario.getApodo().equals(apodo) && contrasenaDesencriptada.equals(contrasena)) {  
-                    return true; 
+            try {
+        ArrayList<String> usuariosCargados = GestorArchivo.leerArchivo("usuarios.txt");
+        for (String linea : usuariosCargados) {
+            String[] elementos = linea.split("%\\$");
+            if (elementos.length == 5) {
+                String apodoArchivo = elementos[1];
+                String contrasenaArchivo = desencriptar(elementos[4]);
+                if (apodoArchivo.equals(apodo) && contrasenaArchivo.equals(contrasena)) {
+                    return true;
+                }
             }
         }
-        return false;  
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this, "Error al verificar las credenciales",
+                "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return false; 
     }
 
     /**

@@ -4,11 +4,13 @@
  */
 package evaluacionfinal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import javax.swing.JTable;
 
 /**
  *
@@ -19,33 +21,46 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
     
     private Usuario usuarioActual;
     public FrmGestionUsuarios() {
-        initComponents();
-        this.usuarioActual=usuarioActual;
-        actualizarUsuarios();
+        try {
+            initComponents();
+            ArrayList<String> lineas=GestorArchivo.leerArchivo("usuarios.txt");
+            actualizarUsuarios();
+
+        } catch(Exception ex) {
+                JOptionPane.showMessageDialog(this, "Ingreso aceptado",
+                    "Admin", JOptionPane.INFORMATION_MESSAGE);
+        }
         
     }
-     
+    
+
 
     
-    void actualizarTabla(ArrayList<Object> usuariosActualizados){
-        DefaultTableModel modelo = (DefaultTableModel) tblUsuarios.getModel(); 
-        modelo.setRowCount(0);
-        for (Object usuario : usuariosActualizados) { 
-            if (usuario instanceof Usuario) { 
-                Usuario u = (Usuario) usuario;
-                modelo.addRow(new Object[]{u.getClave(),u.getApodo(), u.getNombre(), u.getApellidos()}); 
-            }
+    public void actualizarTabla(ArrayList<String> lineas){
+        DefaultTableModel contenidoTabla = (DefaultTableModel) tblUsuarios.getModel();
+        contenidoTabla.setRowCount(0);
+        for(String linea : lineas){
+            Usuario u = new Usuario(linea);
+            contenidoTabla.addRow(u.toArray());
         }
     }
-    public void actualizarUsuarios(){ 
-        try { 
-            ArrayList<Object> usuarios = ManejadorArchivos.leerArchivo("usuarios.txt");
-     actualizarTabla(usuarios); 
-        } catch (ClassNotFoundException ex){ Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex); 
-        JOptionPane.showMessageDialog(this, "Error al actualizar los usuarios.", 
-                "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
-        } 
-    }
+    public void actualizarUsuarios() { 
+        try {
+            ArrayList<String> usuarios = GestorArchivo.leerArchivo("usuarios.txt");
+            DefaultTableModel modelo = (DefaultTableModel) tblUsuarios.getModel();
+            modelo.setRowCount(0); 
+            for (String usuario : usuarios) {
+                String[] datos = usuario.split("&\\$");
+                modelo.addRow(datos);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al leer usuarios: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     }
+
     
 
     /**
@@ -169,55 +184,74 @@ public class FrmGestionUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarUsuarioActionPerformed
 
     private void btnEliminarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarUsuarioActionPerformed
-      int indice = tblUsuarios.getSelectedRow(); 
-      if (indice >= 0){
-          String apodoSeleccionado = (String)tblUsuarios.getValueAt(indice, 1);
-          if (usuarioActual != null && usuarioActual.getApodo().equals(apodoSeleccionado)){ 
-              JOptionPane.showMessageDialog(this, "No puedes eliminar tu propio usuario.",
-                    "Gestion de Usuarios", JOptionPane.WARNING_MESSAGE); 
-          } else{ 
-              int respuesta = JOptionPane.showConfirmDialog(this, "¿Estas seguro de"
-                      + " que deseas eliminar al usuario " + apodoSeleccionado 
-                      + "?", "Gestion de Usuarios", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION){ 
-              try { 
-                  ArrayList<Object> usuariosActualizados = ManejadorArchivos.eliminarObjeto("usuarios.txt", indice);
-                  if (usuariosActualizados != null){ 
-                      JOptionPane.showMessageDialog(this, "El usuario se ha eliminado correctamente",
-                              "Gestion de Usuarios", JOptionPane.INFORMATION_MESSAGE); 
-                      actualizarUsuarios(); 
-                  } else{ 
-                      JOptionPane.showMessageDialog(this, "La eliminación no pudo ser completada", 
-                              "Gestion de Usuarios", JOptionPane.ERROR_MESSAGE); 
-                  } 
-              } catch (Exception ex){ 
-                  Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex); 
-              }
-           }
-          } 
-      } else { JOptionPane.showMessageDialog(this, "Seleccione un usuario de la lista",
-              "Gestion de Usuarios", JOptionPane.WARNING_MESSAGE);
-      }
+        int indice = tblUsuarios.getSelectedRow();
+        if (indice >= 0) {
+            String apodoSeleccionado = (String) tblUsuarios.getValueAt(indice, 1);
+            if (usuarioActual != null && usuarioActual.getApodo().equals(apodoSeleccionado)) {
+                JOptionPane.showMessageDialog(this, "No puedes eliminar tu propio usuario.",
+                        "Gestión de Usuarios", JOptionPane.WARNING_MESSAGE);
+            } else {
+                int respuesta = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar al usuario " + apodoSeleccionado + "?",
+                        "Gestión de Usuarios", JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    try {
+                        ArrayList<String> usuariosActualizados = GestorArchivo.eliminarLinea("usuarios.txt", indice);
+                        if (usuariosActualizados != null) {
+                            JOptionPane.showMessageDialog(this, "El usuario se ha eliminado correctamente.",
+                                    "Gestión de Usuarios", JOptionPane.INFORMATION_MESSAGE);
+                            actualizarUsuarios();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "La eliminación no pudo ser completada.",
+                                    "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (Exception ex) {
+                        Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un usuario de la lista.",
+                    "Gestión de Usuarios", JOptionPane.WARNING_MESSAGE);
+        }
       
     }//GEN-LAST:event_btnEliminarUsuarioActionPerformed
 
     private void btnModificarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarUsuarioActionPerformed
         int indice = tblUsuarios.getSelectedRow(); 
-        if (indice >= 0){ 
+        if (indice >= 0) { 
             try { 
-                ArrayList<Object> usuarios = ManejadorArchivos.leerArchivo("usuarios.txt"); 
-                Usuario usuarioSeleccionado = (Usuario) usuarios.get(indice);
-                FrmUsuario pantalla = new FrmUsuario(this); 
-                pantalla.sobreescribirUsuario(usuarioSeleccionado, indice); 
-                pantalla.setVisible(true); 
-                this.setVisible(false); 
-            } catch (ClassNotFoundException ex){ 
+                ArrayList<String> usuarios = GestorArchivo.leerArchivo("usuarios.txt"); 
+                String lineaSeleccionada = usuarios.get(indice);
+                String[] datos = lineaSeleccionada.split("&\\$");
+                if (datos.length == 4) { 
+                    Usuario usuarioSeleccionado = new Usuario(
+                        Integer.parseInt(datos[0]), 
+                        datos[1],                   
+                        datos[2],                  
+                        datos[3]                   
+                    );
+                    FrmUsuario pantalla = new FrmUsuario(this); 
+                    pantalla.sobreescribirUsuario(usuarioSeleccionado, indice); 
+                    pantalla.setVisible(true); 
+                    this.setVisible(false); 
+                } else {
+                    JOptionPane.showMessageDialog(this, "Los datos del usuario están incompletos o corruptos.",
+                            "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException ex) {
                 Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Error al cargar el usuario para modificar.",
-                          "Gestion de Usuarios", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error al convertir los datos del usuario.",
+                        "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
+            } catch (ClassNotFoundException ex) { 
+                Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Error al cargar el usuario para modificar.",
+                        "Gestión de Usuarios", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                Logger.getLogger(FrmGestionUsuarios.class.getName()).log(Level.SEVERE, null, ex);
             }
-         } else { JOptionPane.showMessageDialog(this, "Seleccione un usuario de la lista", 
-                 "Gestion de Usuarios", JOptionPane.WARNING_MESSAGE);
+        } else { 
+            JOptionPane.showMessageDialog(this, "Seleccione un usuario de la lista.", 
+                    "Gestión de Usuarios", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnModificarUsuarioActionPerformed
 
