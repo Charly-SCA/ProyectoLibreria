@@ -32,8 +32,8 @@ public class FrmAdmin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnGestionarUsuarios = new javax.swing.JButton();
         btnGestionarPrestamos = new javax.swing.JButton();
-        btnConsultarPrestamos = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnResumenDia = new javax.swing.JButton();
+        btnGestionarLibros = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,17 +74,17 @@ public class FrmAdmin extends javax.swing.JFrame {
             }
         });
 
-        btnConsultarPrestamos.setText("Consultar prestamos");
-        btnConsultarPrestamos.addActionListener(new java.awt.event.ActionListener() {
+        btnResumenDia.setText("Resumen Del Dia");
+        btnResumenDia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConsultarPrestamosActionPerformed(evt);
+                btnResumenDiaActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Gestionar Libros");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnGestionarLibros.setText("Gestionar Libros");
+        btnGestionarLibros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnGestionarLibrosActionPerformed(evt);
             }
         });
 
@@ -98,12 +98,12 @@ public class FrmAdmin extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnGestionarLibros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnGestionarUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(104, 104, 104)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGestionarPrestamos, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnConsultarPrestamos, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(btnResumenDia, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -116,8 +116,8 @@ public class FrmAdmin extends javax.swing.JFrame {
                     .addComponent(btnGestionarPrestamos))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnConsultarPrestamos)
-                    .addComponent(jButton1))
+                    .addComponent(btnResumenDia)
+                    .addComponent(btnGestionarLibros))
                 .addGap(0, 35, Short.MAX_VALUE))
         );
 
@@ -131,16 +131,22 @@ public class FrmAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGestionarUsuariosActionPerformed
 
     private void btnGestionarPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarPrestamosActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
+        ListaPrestamos GestionUsuarios = new ListaPrestamos(); 
+        GestionUsuarios.setVisible(true);
     }//GEN-LAST:event_btnGestionarPrestamosActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnGestionarLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionarLibrosActionPerformed
+        this.dispose();
+        FrmListaLibros GestionUsuarios = new FrmListaLibros(); 
+        GestionUsuarios.setVisible(true);
+    }//GEN-LAST:event_btnGestionarLibrosActionPerformed
 
-    private void btnConsultarPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarPrestamosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnConsultarPrestamosActionPerformed
+    private void btnResumenDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResumenDiaActionPerformed
+        this.dispose();
+        FrmResumenDia GestionUsuarios = new FrmResumenDia(); 
+        GestionUsuarios.setVisible(true);
+    }//GEN-LAST:event_btnResumenDiaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,10 +184,10 @@ public class FrmAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnConsultarPrestamos;
+    private javax.swing.JButton btnGestionarLibros;
     private javax.swing.JButton btnGestionarPrestamos;
     private javax.swing.JButton btnGestionarUsuarios;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnResumenDia;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables

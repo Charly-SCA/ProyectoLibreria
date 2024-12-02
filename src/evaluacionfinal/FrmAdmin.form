@@ -30,13 +30,13 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="jButton1" max="32767" attributes="0"/>
+                  <Component id="btnGestionarLibros" max="32767" attributes="0"/>
                   <Component id="btnGestionarUsuarios" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="btnGestionarPrestamos" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnConsultarPrestamos" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnResumenDia" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -53,8 +53,8 @@
               </Group>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnConsultarPrestamos" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnResumenDia" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnGestionarLibros" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="35" max="32767" attributes="0"/>
           </Group>
@@ -119,20 +119,20 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGestionarPrestamosActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnConsultarPrestamos">
+    <Component class="javax.swing.JButton" name="btnResumenDia">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Consultar prestamos"/>
+        <Property name="text" type="java.lang.String" value="Resumen Del Dia"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConsultarPrestamosActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnResumenDiaActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnGestionarLibros">
       <Properties>
         <Property name="text" type="java.lang.String" value="Gestionar Libros"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGestionarLibrosActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
