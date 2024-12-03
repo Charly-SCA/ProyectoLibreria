@@ -35,6 +35,7 @@ public class FrmSolicitud extends javax.swing.JFrame {
         
         this.librosPrestados = new ArrayList<>();
         initComponents();
+        this.formLista = formLista;
         
         // Cargar solicitantes al inicializar
         cargarSolicitantes("Solicitantes.txt", cboSolicitante);

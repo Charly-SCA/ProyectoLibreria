@@ -160,7 +160,7 @@ public class ListaPrestamos extends javax.swing.JFrame {
     int indice = tblPrestamos.getSelectedRow();
     if (indice != -1) {
         DefaultTableModel modelo = (DefaultTableModel) tblPrestamos.getModel();
-        String solicitante = (String) modelo.getValueAt(indice, 0);
+        String solicitante = modelo.getValueAt(indice, 0).toString();
         String fechaPrestamo = modelo.getValueAt(indice, 1).toString();
         String fechaEntrega = modelo.getValueAt(indice, 2).toString();
 
@@ -278,12 +278,16 @@ public class ListaPrestamos extends javax.swing.JFrame {
 
             for (int i = 0; i < libros.size(); i++) {
                 Libro o = new Libro(libros.get(i));
-                if (o.getNombre().equals(libroDevuelto)) {
+                
+                if (o.getNombre().trim().equals(libroDevuelto)) {
+                    
                     o.setDisponible("Disponible");
                     libros.set(i, o.toString());
+                    System.out.println(libros.get(i));
                     libroEncontrado = true;
                     GestorArchivo.reemplazarLinea("Libros.txt", i, o.toString());
                     break;
+                    
                 }
             }
             if (!libroEncontrado) {
