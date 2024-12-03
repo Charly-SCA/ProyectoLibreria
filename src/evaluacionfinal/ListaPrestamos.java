@@ -4,6 +4,9 @@
  */
 package evaluacionfinal;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -154,11 +157,88 @@ public class ListaPrestamos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConsultarActionPerformed
 
     private void btnDevolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolverActionPerformed
+    int indice = tblPrestamos.getSelectedRow();
+    if (indice != -1) {
+        DefaultTableModel modelo = (DefaultTableModel) tblPrestamos.getModel();
+        String solicitante = (String) modelo.getValueAt(indice, 0);
+        String fechaPrestamo = modelo.getValueAt(indice, 1).toString();
+        String fechaEntrega = modelo.getValueAt(indice, 2).toString();
+
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
+            "¿Estás seguro de que deseas marcar este préstamo como devuelto?",
+            "Confirmar devolución", 
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                ArrayList<String> lineas = GestorArchivo.leerArchivo("Prestamos.txt");
+                ArrayList<String> nuevasLineas = new ArrayList<>();
+                for (int i = 0; i < lineas.size(); i++) {
+                    String linea = lineas.get(i);
+                    Prestamo prestamo = new Prestamo(linea);
+                    if (prestamo.getSolicitante().getNombre().equals(solicitante)
+                            && prestamo.getFechaPrestamo().toString().equals(fechaPrestamo)
+                            && prestamo.getFechaDev().toString().equals(fechaEntrega)) {
+                        LocalDate fecha = LocalDate.now();
+                        prestamo.devolverLibros();
+                        modelo.setValueAt(fecha, indice, 2); // Actualizar la columna de devolución
+
+                        // Devolver libros
+                        for (Libro libro : prestamo.getLibrosPrestados()) {
+                            devolverLibro(libro.getNombre());
+                        }
+                        nuevasLineas.add(prestamo.toString());
+                    } else {
+                        nuevasLineas.add(linea);
+                    }
+                }
+                GestorArchivo.reemplazarArchivo("Prestamos.txt", nuevasLineas);
+                actualizarTabla(nuevasLineas);
+                
+                JOptionPane.showMessageDialog(this, "Préstamo devuelto con éxito.",
+                        "Gestión de préstamos", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage(),
+                        "Error al guardar los cambios", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecciona un préstamo para devolver.", 
+                "Gestión de préstamos", JOptionPane.WARNING_MESSAGE);
+    }
+
+        
+        
+        /*
         int indice = tblPrestamos.getSelectedRow();
         if (indice >= 0){
         //todo el codigo para devolver libros considerando que si un préstamo se devuelve, deberá marcarse el préstamo y además se deberá actualizar la disponibilidad de cada libro incluido en él.
-            
+            DefaultTableModel model = (DefaultTableModel) tblPrestamos.getModel(); 
+            String solicitante = (String) model.getValueAt(indice, 0); 
+            String fechaPrestamo = model.getValueAt(indice, 1).toString(); 
+            String devolucion = model.getValueAt(indice, 2).toString();
+            try { 
+                ArrayList<String> lineas = GestorArchivo.leerArchivo("Prestamos.txt"); 
+                ArrayList<String> nuevasLineas = new ArrayList<>(); 
+                for (String linea : lineas) { 
+                    Prestamo prestamo = new Prestamo(linea); 
+                    if (prestamo.getSolicitante().getNombre().equals(solicitante) 
+                            && prestamo.getFechaPrestamo().toString().equals(fechaPrestamo) 
+                            && prestamo.getFechaDev().equals(devolucion)) { 
+                        //prestamo.devolverLibro();  
+                        actualizarLibros(prestamo.getLibrosPrestados()); 
+                        nuevasLineas.add(prestamo.toString()); 
+                    } else { 
+                        nuevasLineas.add(linea); 
+                    } 
+                } 
+                //GestorArchivo.reemplazarLinea("Prestamos.txt", nuevasLineas); 
+                actualizarTabla(nuevasLineas); 
+            } catch (Exception ex) { 
+                JOptionPane.showMessageDialog(null, "Error al devolver los libros: " + ex.getMessage(), 
+                        "Error", JOptionPane.ERROR_MESSAGE); }
         }
+        */
     }//GEN-LAST:event_btnDevolverActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
@@ -169,6 +249,55 @@ public class ListaPrestamos extends javax.swing.JFrame {
         //ocultamos el form actual
         this.setVisible(false);
     }//GEN-LAST:event_btnAgregarActionPerformed
+    
+    private void actualizarLibros(ArrayList<Libro> librosPrestados) { 
+        try { 
+            ArrayList<String> lineas = GestorArchivo.leerArchivo("Libros.txt"); 
+            ArrayList<String> nuevasLineas = new ArrayList<>(); 
+            for (String linea : lineas) { 
+                Libro libro = new Libro(linea); 
+                for (Libro prestado : librosPrestados) { 
+                    if (libro.getNombre().equals(prestado.getNombre())) { 
+                        libro.setDisponible("Disponible"); } } nuevasLineas.add(libro.toString()); 
+            } 
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("Libros.txt"))) { 
+                for (String nuevaLinea : nuevasLineas) { 
+                    writer.write(nuevaLinea + "\n"); 
+                } 
+            } 
+        } catch (Exception ex) { 
+            JOptionPane.showMessageDialog(null, "Error al actualizar los libros: " + ex.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE); 
+        } 
+    }
+    
+    private void devolverLibro(String libroDevuelto) {
+        try {
+            ArrayList<String> libros = GestorArchivo.leerArchivo("Libros.txt");
+            boolean libroEncontrado = false;
+
+            for (int i = 0; i < libros.size(); i++) {
+                Libro o = new Libro(libros.get(i));
+                if (o.getNombre().equals(libroDevuelto)) {
+                    o.setDisponible("Disponible");
+                    libros.set(i, o.toString());
+                    libroEncontrado = true;
+                    GestorArchivo.reemplazarLinea("Libros.txt", i, o.toString());
+                    break;
+                }
+            }
+            if (!libroEncontrado) {
+                JOptionPane.showMessageDialog(this, "El libro no se encontró en el sistema.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "El libro ha sido devuelto correctamente y está disponible para otros préstamos.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al devolver el libro: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     
     /**
      * @param args the command line arguments

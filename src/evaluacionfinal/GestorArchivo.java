@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+package evaluacionfinal;
 
 
 import java.io.BufferedReader;
@@ -12,10 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- *
- * @author paveg
- */
 public class GestorArchivo {
     public static ArrayList<String> leerArchivo(String archivo) throws Exception {
         ArrayList<String> lineas = new ArrayList<>();
@@ -147,6 +144,19 @@ public class GestorArchivo {
         }
     }
     
+    public static void reemplazarArchivo(String archivo, ArrayList<String> nuevasLineas) throws IOException { 
+        escribirArchivo(archivo, nuevasLineas); 
+    }
+    
+    private static void escribirArchivo(String archivo, ArrayList<String> lineas) throws IOException { 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivo))) { 
+            for (String linea : lineas) { 
+                writer.write(linea + "\n"); 
+            } 
+        } 
+    }
+}
+    
     /*
     public static ArrayList<String> agregarLinea(String archivo, String nuevaLinea) {  
         BufferedWriter escritor = null;
@@ -187,4 +197,4 @@ public class GestorArchivo {
             }
         }
     }*/
-}
+

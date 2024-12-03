@@ -348,10 +348,15 @@ public class FrmSolicitud extends javax.swing.JFrame {
         //Mostramos el form de la lista
         formLista.setVisible(true);
         //Cerramos el form actual
-        this.dispose();
+        dispose();
     } catch (Exception ex) {
         JOptionPane.showMessageDialog(null, "Error al guardar el préstamo: " + ex.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
+    }finally{
+        //Mostramos el form de la lista
+        formLista.setVisible(true);
+        //Cerramos el form actual
+        dispose();
     }
     }//GEN-LAST:event_btnGuardarPrestamoActionPerformed
 

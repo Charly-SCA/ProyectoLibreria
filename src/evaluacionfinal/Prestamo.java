@@ -20,6 +20,7 @@ public class Prestamo {
     public LocalDate fechaPrestamo;
     public LocalDate fechaLimiteEntrega;
     private LocalDate fechaDevolucion;
+    private String devolucion;
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -36,11 +37,12 @@ public class Prestamo {
     }
 
     public Prestamo(Solicitante solicitante, ArrayList<Libro> librosPrestados, LocalDate fechaPrestamo, 
-            LocalDate fechaLimiteEntrega) {
+            LocalDate fechaLimiteEntrega, String devolucion) {
         this.solicitante = solicitante;
         this.librosPrestados = librosPrestados;
         this.fechaPrestamo = fechaPrestamo;
         this.fechaLimiteEntrega = fechaLimiteEntrega;
+        this.devolucion = devolucion;
     }
     
     public Prestamo(Solicitante solicitante, ArrayList<Libro> librosPrestados, LocalDate fechaLimiteEntrega) {
@@ -112,10 +114,15 @@ public class Prestamo {
         this.fechaDevolucion = fechaDev;
     }
 
-   
+   public void devolverLibros() { 
+       this.devolucion = "Devuelto"; 
+       for (Libro libro : librosPrestados) { 
+           libro.setDisponible("Disponible"); 
+       } 
+   }
 
     public Object[] toArray() { 
-        return new Object[]{solicitante, fechaPrestamo, fechaLimiteEntrega, fechaDevolucion};
+        return new Object[]{solicitante, fechaPrestamo, fechaLimiteEntrega, fechaDevolucion, devolucion};
     }
 
     @Override
